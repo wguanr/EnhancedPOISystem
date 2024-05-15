@@ -1,0 +1,29 @@
+{
+	"FileVersion": 3,
+	"Version": 2,
+	"VersionName": "1.0",
+	"FriendlyName": "EnhancedPOI",
+	"Description": "",
+	"Category": "Other",
+	"CreatedBy": "",
+	"CreatedByURL": "",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"CanContainContent": true,
+	"IsBetaVersion": true,
+	"IsExperimentalVersion": true,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "EnhancedPOI",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "EnhancedPOISlate",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}
