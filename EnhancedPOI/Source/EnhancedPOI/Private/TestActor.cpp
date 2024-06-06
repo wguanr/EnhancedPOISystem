@@ -5,6 +5,8 @@
 #include "POIWidget.h"
 #include "Camera/CameraComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "POIHub.h"
+
 
 // Sets default values
 ATestActor::ATestActor()
@@ -32,7 +34,11 @@ void ATestActor::BeginPlay()
 		}
 	}
 
-	
+	TArray<UObject*> FoundObjects;
+	GetObjectsOfClass(UPOIHub::StaticClass(), FoundObjects, false);
+	UPOIHub* POIHub = Cast<UPOIHub>(FoundObjects[0]);
+	FString out = POIHub->GetPOIInfo().GetInfo();
+	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, out);
 }
 
 // Called every frame

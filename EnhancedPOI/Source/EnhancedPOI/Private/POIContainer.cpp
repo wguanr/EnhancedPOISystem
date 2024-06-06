@@ -26,9 +26,7 @@ APOIContainer::APOIContainer()
 
 	RootComponent = CreateDefaultSubobject<USceneComponent>("SceneRoot");
 	DataDrivenComponent = CreateDefaultSubobject<UDataDrivenComponent>("DataDrivenComponent");
-	// POICameraComponent = CreateDefaultSubobject<UCameraComponent>("POICameraComponent");
-	// POICameraComponent->SetupAttachment(RootComponent);
-	//
+
 	
 }
 
@@ -42,6 +40,8 @@ void APOIContainer::BeginPlay()
 		Tags.AddUnique(CustomUID);
 		
 	}
+
+	// cache the info to the POIHub
 	TArray<UObject*> Objects;
 	GetObjectsOfClass(UPOIHub::StaticClass(),Objects,false);
 	UPOIHub* POIHub;
@@ -144,6 +144,7 @@ void APOIContainer::POIHide()
 	
 }
 
+#pragma region CameraViewOperations
 void APOIContainer::SetFocus(const float BlendTime = 2.f,const EViewTargetBlendFunction BlendFunction = VTBlend_EaseIn)
 {
 	APlayerCameraManager* CameraManager = GetWorld()->GetFirstPlayerController()->PlayerCameraManager;
@@ -170,6 +171,24 @@ void APOIContainer::ResetFocus()
 	
 }
 
+FVector APOIContainer::GetPOICameraViewLocation() const
+{
+	check(POICameraComponent);
+	FMinimalViewInfo VInfo;
+	POICameraComponent->GetCameraView(0,VInfo);
+	return VInfo.Location;
+}
+
+FVector APOIContainer::GetPOICameraViewRotation() const
+{
+	check(POICameraComponent);
+	FMinimalViewInfo VInfo;
+	POICameraComponent->GetCameraView(0,VInfo);
+	
+	return VInfo.Rotation.Vector();
+}
+
+#pragma endregion
 // better to make this in constructor
 void APOIContainer::SetDataDrivenComponent()
 {

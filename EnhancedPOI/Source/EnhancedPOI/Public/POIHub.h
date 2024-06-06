@@ -12,42 +12,43 @@
  *  get all poi system actors
  */
 USTRUCT(BlueprintType)
-struct FPOIObjectsPool
+struct FPOIObjectsInfo
 {
 	GENERATED_BODY()
 
 public:
-
-	FPOIObjectsPool();
-	~FPOIObjectsPool();
+	FPOIObjectsInfo() = default;
+	FPOIObjectsInfo(TSoftObjectPtr<AActor> POI);
+	~FPOIObjectsInfo();
 	
+	
+	int32 UID;
+	TSoftObjectPtr<AActor> POIActor;
+	// TTuple<> POIInfo;
+
+	//got info from POIActor
 	UPROPERTY(BlueprintReadOnly)
-	FName UID;
-	UPROPERTY(BlueprintReadOnly)
-	TArray<FString> strTags;
+	TArray<FName> Tags;
 	UPROPERTY(BlueprintReadOnly)
 	FTransform Transform;
 	UPROPERTY(BlueprintReadOnly)
 	int StyleIndex = 999;
 	UPROPERTY(BlueprintReadOnly)
-	UClass* POIActorClass;
+	TSubclassOf<AActor> POIActorClass;
 
+	UPROPERTY()
+	bool bIsVisible = false;
 	
-
 	
-	FString ToJSONString() const
+	
+	FString GetInfo() const
 	{
 		
 		return FString::Printf(TEXT(
 			"{ \"UID\": \"%s\", \"Tags\": [\"%s\"], \"Transform\": \"%s\", \"StyleIndex\": %d, \"POIActorClass\": \"%s\" }"),
-			*UID.ToString(),*FString::Join(strTags, TEXT("\",\"")), *Transform.ToString(), StyleIndex, *POIActorClass->GetName());
+			*FString::FromInt(UID),*FString::Join(Tags, TEXT("\",\"")), *Transform.ToString(), StyleIndex, *POIActorClass->GetName());
 	}
 
-	UPROPERTY()
-	bool bIsVisible = false;
-
-	UPROPERTY()
-	TMap<FName,AActor*> POICacheMap;
 
 
 
@@ -61,15 +62,19 @@ class ENHANCEDPOI_API UPOIHub : public UObject
 public:
 	UPOIHub();
 
+	UFUNCTION(BlueprintCallable)
+	FPOIObjectsInfo GetPOIInfo(const FName UID);
+
 	UFUNCTION()
-	static void GetPOIFast(FName UID);
+	AActor* GetPOIFast(FName UID);
 	
-	void RegisterPOI(FName UID, AActor* POIActor)
-	{
-		POIObjectsPool.POICacheMap.Add(UID, POIActor);
-	};
+	void RegisterPOI(FName UID, const AActor* POIActor);
 
 private:
 	UPROPERTY()
-	FPOIObjectsPool POIObjectsPool;	
+	TMap<FName,TSoftObjectPtr<AActor>> POICacheMap;
+
+	// todo: using tuple to store the info
+	UPROPERTY()
+	TArray<FPOIObjectsInfo> POIObjectsPool;	
 };

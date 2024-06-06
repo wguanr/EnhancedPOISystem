@@ -47,10 +47,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Settings)
 	FString GetCallBackMessage();
 
-	UFUNCTION(BlueprintCallable)
-	virtual void SetFocus(const float BlendTime,const EViewTargetBlendFunction BlendFunction);
-	UFUNCTION(BlueprintCallable)
-	void ResetFocus();
 
 	
 protected:
@@ -68,7 +64,14 @@ private:
 	void SetDataDrivenComponent();
 
 
-#pragma region Camera
+#pragma region CameraViewOperations
+	
+public:
+	UFUNCTION(BlueprintCallable)
+	virtual void SetFocus(const float BlendTime,const EViewTargetBlendFunction BlendFunction);
+	UFUNCTION(BlueprintCallable)
+	void ResetFocus();
+
 	
 protected:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = Settings)
@@ -77,6 +80,11 @@ protected:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = Components)
 	class UCameraComponent* POICameraComponent;
 
+	UFUNCTION(BlueprintCallable)
+	FVector GetPOICameraViewLocation() const;
+	UFUNCTION(BlueprintCallable)
+	FVector GetPOICameraViewRotation() const;
+	
 #pragma endregion
 
 	
