@@ -40,7 +40,8 @@ void APOIContainer::BeginPlay()
 		Tags.AddUnique(CustomUID);
 		
 	}
-
+	UCameraComponent* CameraComponent =Cast<UCameraComponent>( GetComponentByClass(UCameraComponent::StaticClass()));
+	POICameraComponent = CameraComponent;
 	// cache the info to the POIHub
 	TArray<UObject*> Objects;
 	GetObjectsOfClass(UPOIHub::StaticClass(),Objects,false);
@@ -90,24 +91,24 @@ void APOIContainer::OnConstruction(const FTransform& Transform)
 
 	// SetDataDrivenComponent();
 
-	if (bAttachCamera)
-	{
-		POICameraComponent = Cast<UCameraComponent>(AddComponentByClass(UCameraComponent::StaticClass(),
-			false,FTransform::Identity,false));
-		POICameraComponent->SetupAttachment(RootComponent);
-		
-	}
-	else
-	{
-		if (POICameraComponent)
-		{
-			POICameraComponent->DestroyComponent();
-			POICameraComponent = nullptr;
-			
-		}
-	}
-	POICameraComponent->Activate(bAutoActivate);
-	DataDrivenComponent->Activate(bAutoActivate);
+	// if (bAttachCamera)
+	// {
+	// 	POICameraComponent = Cast<UCameraComponent>(AddComponentByClass(UCameraComponent::StaticClass(),
+	// 		false,FTransform::Identity,false));
+	// 	POICameraComponent->SetupAttachment(RootComponent);
+	// 	
+	// }
+	// else
+	// {
+	// 	if (POICameraComponent)
+	// 	{
+	// 		POICameraComponent->DestroyComponent();
+	// 		POICameraComponent = nullptr;
+	// 		
+	// 	}
+	// }
+	// POICameraComponent->Activate(bAutoActivate);
+	// DataDrivenComponent->Activate(bAutoActivate);
 	
 }
 

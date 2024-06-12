@@ -77,7 +77,7 @@ protected:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = Settings)
 	bool bAttachCamera;
 	
-	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = Components)
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	class UCameraComponent* POICameraComponent;
 
 	UFUNCTION(BlueprintCallable)

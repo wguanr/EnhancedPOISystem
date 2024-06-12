@@ -33,8 +33,8 @@ UPOIHub::UPOIHub()
 
 FPOIObjectsInfo UPOIHub::GetPOIInfo(const FName UID)
 {
-	
-	return POIObjectsPool;
+	// todo : ????
+	return FPOIObjectsInfo(GetPOIFast(UID));
 }
 
 AActor* UPOIHub::GetPOIFast(FName UID)

@@ -43,10 +43,11 @@ public:
 	
 	FString GetInfo() const
 	{
-		
-		return FString::Printf(TEXT(
-			"{ \"UID\": \"%s\", \"Tags\": [\"%s\"], \"Transform\": \"%s\", \"StyleIndex\": %d, \"POIActorClass\": \"%s\" }"),
-			*FString::FromInt(UID),*FString::Join(Tags, TEXT("\",\"")), *Transform.ToString(), StyleIndex, *POIActorClass->GetName());
+		// todo: fix
+		// return FString::Printf(TEXT(
+		// 	"{ \"UID\": \"%s\", \"Tags\": [\"%s\"], \"Transform\": \"%s\", \"StyleIndex\": %d, \"POIActorClass\": \"%s\" }"),
+		// 	*FString::FromInt(UID),*FString::Join(Tags, TEXT("\",\"")), *Transform.ToString(), StyleIndex, *POIActorClass->GetName());
+		return FString();
 	}
 
 

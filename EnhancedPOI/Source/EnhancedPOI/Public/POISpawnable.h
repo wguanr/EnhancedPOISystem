@@ -14,9 +14,9 @@ class ENHANCEDPOI_API APOISpawnable : public APOIContainer
 public:
 	// Sets default values for this actor's properties
 	APOISpawnable();
-	virtual void OnConstruction(const FTransform& Transform) override;
+	// virtual void OnConstruction(const FTransform& Transform) override;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = POI)
-	bool bManualAttach;
+	bool bManualAttach = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = POI)
 	TSubclassOf<AActor> POIActorClass;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = POI,meta=(EditCondition="bManualAttach",EditConditionHides))

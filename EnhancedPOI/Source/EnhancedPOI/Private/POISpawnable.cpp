@@ -13,15 +13,15 @@ APOISpawnable::APOISpawnable()
 	
 }
 
-void APOISpawnable::OnConstruction(const FTransform& Transform)
-{
-	Super::OnConstruction(Transform);
-	if (bManualAttach)
-	{
-		GetWorld()->SpawnActor<AActor>(POIActorClass, POITransform);
-		
-	}
-}
+// void APOISpawnable::OnConstruction(const FTransform& Transform)
+// {
+// 	Super::OnConstruction(Transform);
+// 	if (bManualAttach && POIActorClass)
+// 	{
+// 		// GetWorld()->SpawnActor<AActor>(POIActorClass, POITransform);
+// 		//
+// 	}
+// }
 
 // Called when the game starts or when spawned
 void APOISpawnable::BeginPlay()

@@ -26,7 +26,7 @@ public class EnhancedPOI : ModuleRules
 			new string[]
 			{
 				"Core",
-				"EnhancedPOISlate",
+				
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
@@ -38,8 +38,8 @@ public class EnhancedPOI : ModuleRules
 				"Projects",
 				"InputCore",
 				"EditorFramework",
-				"UnrealEd",
-				"ToolMenus",
+				
+				// "ToolMenus",
 				"CoreUObject",
 				"Engine",
 				"Slate",
