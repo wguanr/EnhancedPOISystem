@@ -37,9 +37,9 @@ public class EnhancedPOI : ModuleRules
 			{
 				"Projects",
 				"InputCore",
-				"EditorFramework",
+				// "EditorFramework",
 				
-				// "ToolMenus",
+				
 				"CoreUObject",
 				"Engine",
 				"Slate",

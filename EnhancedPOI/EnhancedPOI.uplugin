@@ -19,11 +19,6 @@
 			"Name": "EnhancedPOI",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
-		},
-		{
-			"Name": "EnhancedPOISlate",
-			"Type": "Runtime",
-			"LoadingPhase": "Default"
 		}
 	]
 }

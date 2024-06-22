@@ -192,10 +192,11 @@ void APOIWidget::Tick(float DeltaTime)
 
 
 #pragma endregion
+#if WITH_EDITOR
 void APOIWidget::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
 	Super::PostEditChangeProperty(PropertyChangedEvent);
-#if WITH_EDITOR
+
 	if (PropertyChangedEvent.Property!=nullptr)
 	{
 		const FName ThisProperty = PropertyChangedEvent.GetPropertyName();
@@ -209,10 +210,11 @@ void APOIWidget::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEv
 		UpdateComponents();
 		
 	}
-#endif
-	
+
 }
 
+#endif
+	
 
 
 void APOIWidget::UpdateComponents() const
