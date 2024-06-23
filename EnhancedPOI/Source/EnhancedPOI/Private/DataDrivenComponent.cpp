@@ -3,6 +3,9 @@
 
 #include "DataDrivenComponent.h"
 
+#include "ImageUtils.h"
+#include "Misc/FileHelper.h"
+
 
 // Sets default values for this component's properties
 UDataDrivenComponent::UDataDrivenComponent()
@@ -14,18 +17,54 @@ UDataDrivenComponent::UDataDrivenComponent()
 	// ...
 }
 
-void UDataDrivenComponent::LoadData(const EDataSrc DataSource)
+bool UDataDrivenComponent::LoadDataCached(const FFilePath DataSourcePath, TArray<FName>& UIDs)
 {
+	EDataSrcType DataSourceType = EDataSrcType::EFromCSV;
+	FString FileName;
+	FString FileExtension;
+	//whether the file is 
+	if (!FPaths::FileExists(DataSourcePath.FilePath))
+	{
+		UE_LOG(LogTemp, Error, TEXT("[DataDrivenComponent] File not found: %s"), *DataSourcePath.FilePath);
+		return false;
+	}
+	TArray<FString> DataStr;
+	if(FFileHelper::LoadFileToStringArray(DataStr, *DataSourcePath.FilePath))
+	{
+		FString DataHeader = DataStr[0];
+		DataStr.RemoveAt(0);
+		TIterator<TArray<FString>> It(DataStr);
+		while (It)
+		{
+			//parse the data
+			FString Line = *It;
+			//parse the line
+			TArray<FString> LineData;
+			Line.ParseIntoArray(LineData, TEXT(","), false);
+			//parse the line data
+			FName UID = *LineData[0];
+			UIDs.Add(UID);
+			//parse the line data as X Y Z
+			FVector Location = FVector(FCString::Atof(*LineData[1]), FCString::Atof(*LineData[2]), FCString::Atof(*LineData[3]));
+			FString Description = LineData[10];
+
+			//todo: serialize the data and cache it
+			++It;
+		}
+	}
+
+	
+	
+	
+	
+	return true;
 }
 
 void UDataDrivenComponent::UpdateFromDataSrc()
 {
 }
 
-bool UDataDrivenComponent::UpdateActorProperty(const FName& PropertyName)
-{
-	return true;
-}
+
 
 FTransform UDataDrivenComponent::GetTransform(const FName& UID)
 {
@@ -42,30 +81,13 @@ FString UDataDrivenComponent::GetStringProperty(const FName& UID, const FName& P
 	return FString();
 }
 
-void UDataDrivenComponent::CullNullData()
-{
-}
-
-void UDataDrivenComponent::LoadDataFromCSV()
-{
-}
-
-void UDataDrivenComponent::LoadDataFromJSON()
-{
-}
-
-void UDataDrivenComponent::LoadDataFromURL()
-{
-}
-
-
 // Called when the game starts
 void UDataDrivenComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
 	// ...
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("[DataDrivenComponent] BeginPlay"));
+	GEngine->AddOnScreenDebugMessage(11, 5.f, FColor::Green, TEXT("[DataDrivenComponent] BeginPlay"));
 }
 
 

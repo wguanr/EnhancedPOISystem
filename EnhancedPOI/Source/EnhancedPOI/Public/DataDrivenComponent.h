@@ -7,13 +7,41 @@
 #include "DataDrivenComponent.generated.h"
 
 UENUM(Blueprintable)
-enum struct EDataSrc : uint8
+enum struct EDataSrcType : uint8
 {
 	EFromCSV,
 	EFromJSON,
 	EFromURL
 };
 
+// make a datatable struct
+// USTRUCT(BlueprintType)
+// struct FDataDrivenTable : public FTableRowBase
+// {
+// 	GENERATED_USTRUCT_BODY()
+// 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "POI | DataDriven")
+// 	FName UID;
+// 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "POI | DataDriven")
+// 	FString FriendlyName;
+// 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "POI | DataDriven")
+// 	FVector Location;
+// 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "POI | DataDriven")
+// 	FRotator Rotation;
+// 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "POI | DataDriven")
+// 	FVector Scale;
+// 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "POI | DataDriven")
+// 	FString Description;
+// };
+
+
+
+// todo: add cache
+/*
+ * DataDrivenComponent is a component that can be attached to any actor to get data from different sources;
+ * It can be used to load data from UDataTable
+ * this is just used for short small data
+ *
+ */
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class ENHANCEDPOI_API UDataDrivenComponent : public UActorComponent
 {
@@ -23,11 +51,20 @@ public:
 	// Sets default values for this component's properties
 	UDataDrivenComponent();
 	UFUNCTION(BlueprintCallable, Category = "DataDriven")
-	void LoadData(const EDataSrc DataSource); // make a link table from UID
+	static bool LoadDataCached(const FFilePath DataSourcePath, TArray<FName>& UIDs); // make a link table from UID
+	
+	bool DataLoaded;
+
 	UFUNCTION(BlueprintCallable, Category = "DataDriven")
 	void UpdateFromDataSrc();
-	UFUNCTION(BlueprintCallable, Category = "DataDriven")
-	bool UpdateActorProperty(const FName& PropertyName);
+
+	UPROPERTY(EditAnywhere, Category = "POI | DataDriven")
+	TArray<FString> DataFields;
+	UPROPERTY()
+	TArray<FName> POIUIDArray;
+	
+	TArray<FName> GetUIDs(){return POIUIDArray;};
+	
 	
 protected:
 	// Called when the game starts
@@ -35,26 +72,27 @@ protected:
 	// UPROPERTY(EditDefaultsOnly, Category = "POI | DataDriven")
 	// EDataSrc DataSource = EDataSrc::EFromCSV;
 
+#pragma region Getters
+public:
+	
 	FTransform GetTransform(const FName& UID);
-	FVector GetFVectorProperty(const FName& UID,const FName& PropertyName); // location, rotation, scale .etc
+	FVector GetFVectorProperty(const FName& UID,const FName& PropertyName);
 	FString GetStringProperty(const FName& UID, const FName& PropertyName);
-
 	
 	
+#pragma endregion
 private:
-	
-	void CullNullData();
 	
 	uint8 Data;
 	
-	void LoadDataFromCSV();
-	void LoadDataFromJSON();
-	void LoadDataFromURL();
+	
 	
 public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 
-	
+	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = Settings, meta = (EditCondition = "LocationAnchor", EditConditionHides))
+	TSoftObjectPtr<UDataTable> POIParams;
+
 };

@@ -26,7 +26,7 @@ public class EnhancedPOI : ModuleRules
 			new string[]
 			{
 				"Core",
-				
+				"FileHelper",
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
@@ -38,7 +38,7 @@ public class EnhancedPOI : ModuleRules
 				"Projects",
 				"InputCore",
 				// "EditorFramework",
-				
+				// "FileHelper",
 				
 				"CoreUObject",
 				"Engine",

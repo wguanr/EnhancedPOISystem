@@ -8,24 +8,23 @@
 #include "Camera/PlayerCameraManager.h"
 
 
-
+DEFINE_LOG_CATEGORY (LogPOIContainer);
 
 
 APOIContainer::APOIContainer()
 {
 	POIObject = nullptr;
-	DataDrivenComponent = nullptr;
+
 	POICameraComponent = nullptr;
 	PrimaryActorTick.bCanEverTick = true;
-	bDataDriven = false;
-	bAttachCamera = false;
+
 	bDefaultHiddenPOI = false;
 	bAutoActivate = true;
 	bOnDebug = false;
 	CallbackMessage = TEXT("POIContainer");
 
 	RootComponent = CreateDefaultSubobject<USceneComponent>("SceneRoot");
-	DataDrivenComponent = CreateDefaultSubobject<UDataDrivenComponent>("DataDrivenComponent");
+	// DataDrivenComponent = CreateDefaultSubobject<UDataDrivenComponent>("DataDrivenComponent");
 
 	
 }
@@ -33,13 +32,14 @@ APOIContainer::APOIContainer()
 void APOIContainer::BeginPlay()
 {
 	Super::BeginPlay();
+	// set the default UProperties
 	SetActorHiddenInGame(bDefaultHiddenPOI);
 	if (!CustomUID.IsEqual(TEXT("CustomName&Tag")))
 	{
-		// const auto x = FString::Printf("POI.UID.%ls", *CustomUID.ToString());
 		Tags.AddUnique(CustomUID);
-		
 	}
+	bLocationAnchor? GetRootComponent()->SetMobility(EComponentMobility::Movable):GetRootComponent()->SetMobility(EComponentMobility::Static);
+	
 	UCameraComponent* CameraComponent =Cast<UCameraComponent>( GetComponentByClass(UCameraComponent::StaticClass()));
 	POICameraComponent = CameraComponent;
 	// cache the info to the POIHub
@@ -60,13 +60,13 @@ void APOIContainer::BeginPlay()
 
 	///component setting
 
-	if (bDataDriven)
+	
+
+	
+	if (UCameraComponent* POICam = Cast<UCameraComponent>( GetComponentByClass(UCameraComponent::StaticClass())))
 	{
-		
-	}
-	if (bAttachCamera)
-	{
-		
+		POICameraComponent = POICam;
+		UE_LOG(LogPOIContainer, Log, TEXT("[Init] POICameraComponent is set correctly"));
 	}
 	/// debug test///
 	/// 
@@ -77,7 +77,7 @@ void APOIContainer::BeginPlay()
 		// check if the poi object is set correctly
 		if (!POIObject)
 		{
-			UE_LOG(LogTemp, Error, TEXT("POIObject is not set correctly"));
+			UE_LOG(LogPOIContainer, Error, TEXT("POIObject is not set correctly"));
 		}
 	}
 	
@@ -88,28 +88,6 @@ void APOIContainer::BeginPlay()
 void APOIContainer::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
-
-	// SetDataDrivenComponent();
-
-	// if (bAttachCamera)
-	// {
-	// 	POICameraComponent = Cast<UCameraComponent>(AddComponentByClass(UCameraComponent::StaticClass(),
-	// 		false,FTransform::Identity,false));
-	// 	POICameraComponent->SetupAttachment(RootComponent);
-	// 	
-	// }
-	// else
-	// {
-	// 	if (POICameraComponent)
-	// 	{
-	// 		POICameraComponent->DestroyComponent();
-	// 		POICameraComponent = nullptr;
-	// 		
-	// 	}
-	// }
-	// POICameraComponent->Activate(bAutoActivate);
-	// DataDrivenComponent->Activate(bAutoActivate);
-	
 }
 
 FString APOIContainer::GetCallBackMessage()
@@ -148,20 +126,25 @@ void APOIContainer::POIHide()
 #pragma region CameraViewOperations
 void APOIContainer::SetFocus(const float BlendTime = 2.f,const EViewTargetBlendFunction BlendFunction = VTBlend_EaseIn)
 {
+	if (!IsValid(POICameraComponent))
+	{
+		UE_LOG(LogPOIContainer, Error, TEXT("[Init] POICameraComponent is not set correctly"));
+		return;
+	}
 	APlayerCameraManager* CameraManager = GetWorld()->GetFirstPlayerController()->PlayerCameraManager;
 	FViewTargetTransitionParams Params;
 	Params.BlendTime = BlendTime;
 	// Params.bLockOutgoing = true;
 	Params.BlendExp = 2.0f;
 	Params.BlendFunction = BlendFunction;
-	
-	if (AActor* ViewTarget = Cast<AActor>(POIObject))
+
+	// align the camera view to POICameraComponent
+	if (IsValid( Cast<AActor>(POIObject)->GetComponentByClass(UCameraComponent::StaticClass())))
 	{
-		CameraManager->SetViewTarget(ViewTarget,Params);
-		// reset the view target
-		
+		CameraManager->SetViewTarget(Cast<AActor>(POIObject),Params);
 		return;
 	}
+	
 	CameraManager->SetViewTarget(this,Params);
 }
 
@@ -176,7 +159,7 @@ FVector APOIContainer::GetPOICameraViewLocation() const
 {
 	check(POICameraComponent);
 	FMinimalViewInfo VInfo;
-	POICameraComponent->GetCameraView(0,VInfo);
+	POICameraComponent->GetCameraView(this->GetWorld()->GetDeltaSeconds(),VInfo);
 	return VInfo.Location;
 }
 
@@ -184,31 +167,11 @@ FVector APOIContainer::GetPOICameraViewRotation() const
 {
 	check(POICameraComponent);
 	FMinimalViewInfo VInfo;
-	POICameraComponent->GetCameraView(0,VInfo);
+	POICameraComponent->GetCameraView(this->GetWorld()->GetDeltaSeconds(),VInfo);
 	
 	return VInfo.Rotation.Vector();
 }
 
 #pragma endregion
 // better to make this in constructor
-void APOIContainer::SetDataDrivenComponent()
-{
-	if (bDataDriven)
-	{
-		if (DataDrivenComponent) return;
-		
-		DataDrivenComponent = Cast<UDataDrivenComponent>(AddComponentByClass(
-			UDataDrivenComponent::StaticClass(),false,FTransform::Identity,false));
-		DataDrivenComponent->Activate(bAutoActivate);
-		
-	}
-	else
-	{
-		if (DataDrivenComponent)
-		{
-			DataDrivenComponent->DestroyComponent();
-			DataDrivenComponent = nullptr;
-		}
-	}
-	
-}
+

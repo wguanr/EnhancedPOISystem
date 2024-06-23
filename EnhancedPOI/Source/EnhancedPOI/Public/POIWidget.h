@@ -48,10 +48,10 @@ protected:
 	
 	UPROPERTY(BlueprintReadWrite,EditAnywhere, Category = Settings)
 	TSubclassOf<UUserWidget> UserDefinedWidgetClass;
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = Settings)
+	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = POIContainer)
 	FText Subtitle = FText::FromString(TEXT("Subtitle"));
 		
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = Settings)
+	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = POIContainer)
 	UTexture2D* ImageBG;
 	
 	UPROPERTY(BlueprintReadWrite,EditDefaultsOnly, Category = Settings)

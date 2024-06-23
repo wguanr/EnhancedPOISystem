@@ -20,24 +20,13 @@ APOIWidget::APOIWidget()
 	// RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SceneRoot"));
 	WidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("WidgetComponent"));
 	WidgetComponent->SetupAttachment(RootComponent);
-
-
+	
 	WidgetComponent->SetWidgetSpace(EWidgetSpace::World);
 	WidgetComponent->SetVisibility(true);
 	WidgetComponent->Activate(bAutoActivate);
 	
 	// 2: set component
 	WidgetComponent->InitWidget();
-	
-	if (UserDefinedWidgetClass)
-	{
-		WidgetComponent->SetWidgetClass(UserDefinedWidgetClass);
-	}
-	else
-	{
-		// todo: add default widget class
-	}
-
 	
 	
 }

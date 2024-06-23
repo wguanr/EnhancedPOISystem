@@ -36,7 +36,7 @@ void ATestActor::BeginPlay()
 
 	TArray<UObject*> FoundObjects;
 	GetObjectsOfClass(UPOIHub::StaticClass(), FoundObjects, false);
-	UPOIHub* POIHub = Cast<UPOIHub>(FoundObjects[0]);
+	// UPOIHub* POIHub = Cast<UPOIHub>(FoundObjects[0]); //here is bug
 	// FString out = POIHub->GetPOIInfo().GetInfo();
 	// GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, out);
 }

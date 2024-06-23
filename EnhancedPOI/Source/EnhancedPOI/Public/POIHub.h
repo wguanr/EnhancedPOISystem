@@ -39,7 +39,7 @@ public:
 	UPROPERTY()
 	bool bIsVisible = false;
 	
-	
+
 	
 	FString GetInfo() const
 	{
